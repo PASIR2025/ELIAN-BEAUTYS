@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
-  <link rel="manifest" href="manifest.json" />
   <title>Asistente Académico PASIR</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,6 +39,21 @@
       padding: 18px;
     }
     .app { max-width: 1450px; margin: 0 auto; }
+
+    .sub { display: none; }
+    .stats-toggle-wrap {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 14px;
+    }
+    .stats-toggle-btn {
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+    .titulo-busqueda { font-size: 1.02rem; }
+    header { margin-bottom: 10px; }
+    h1 { font-size: 1.3rem; margin-bottom: 0; }
+
     header {
       display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap;
       margin-bottom: 18px;
@@ -97,11 +110,59 @@
     .item-top, .item-actions, .badges { display: flex; gap: 8px; flex-wrap: wrap; }
     .item-top { justify-content: space-between; align-items: flex-start; }
     .item-title { font-weight: 800; }
+    
+    /* ocultar badges debajo del título */
+    .badges {
+      display: none !important;
+    }
+
     .badge {
       padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-size: .72rem;
     }
     .item-text { white-space: pre-wrap; line-height: 1.5; font-size: .91rem; margin: 10px 0; }
     .empty { text-align: center; color: var(--muted); padding: 20px 8px; }
+
+    /* ===== BARRA SUPERIOR COMPACTA Y FLOTANTE ===== */
+    .top-actions {
+      position: sticky;
+      top: 10px;
+      z-index: 1100;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.16);
+    }
+    body[data-theme="light"] .top-actions {
+      background: rgba(224, 229, 235, 0.84);
+      box-shadow: 0 10px 24px rgba(31,41,55,.12);
+    }
+    .top-actions .btn-row {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-start;
+      margin: 0;
+    }
+    .top-actions button {
+      font-size: .84rem;
+      padding: 8px 12px;
+      min-height: 36px;
+      border-radius: 10px;
+      min-width: auto;
+      box-shadow: none;
+    }
+    .top-actions .btn-main { color: #062b1c; }
+    .top-actions .btn-ghost { background: rgba(255,255,255,.03); }
+    .top-actions .btn-danger { background: rgba(248,113,113,.08); }
+
     .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 18px; }
     .stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
     .stat small { color: var(--muted); display: block; margin-bottom: 4px; }
@@ -129,9 +190,131 @@
       opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s ease;
     }
     .notice.show { opacity: 1; transform: translateY(0); }
+
+    /* ===== MEJORA MÓVIL COMPACTA ===== */
+    .item-title {
+      font-weight: 700;
+      line-height: 1.28;
+    }
+    .item-actions {
+      margin-top: 10px;
+    }
+    .item-actions button {
+      flex: 0 0 auto;
+    }
+    @media (max-width: 900px) and (orientation: landscape) {
+      body { padding: 10px; }
+      .app { max-width: 100%; }
+      h1 { font-size: 1.05rem; }
+      .top-actions {
+        top: 6px;
+        padding: 6px 8px;
+        margin-bottom: 10px;
+      }
+      .top-actions .btn-row {
+        gap: 6px;
+      }
+      .top-actions button {
+        font-size: .72rem;
+        padding: 5px 8px;
+        min-height: 28px;
+        border-radius: 8px;
+      }
+      .card {
+        padding: 12px;
+        border-radius: 12px;
+      }
+      .card h2 {
+        font-size: .90rem;
+        margin-bottom: 8px;
+      }
+      .titulo-busqueda { font-size: .88rem; }
+      .field { margin-bottom: 8px; }
+      label {
+        font-size: .76rem;
+        margin-bottom: 4px;
+      }
+      input[type="text"], select, textarea {
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-size: .86rem;
+      }
+      textarea { min-height: 96px; }
+      .btn-row button, .item-actions button {
+        font-size: .76rem;
+        padding: 7px 10px;
+        min-height: 30px;
+      }
+      .item {
+        padding: 10px;
+      }
+      .item-title {
+        font-size: .92rem;
+        font-weight: 700;
+      }
+      .item-text {
+        font-size: .84rem;
+        margin: 8px 0;
+      }
+      .badge {
+        font-size: .66rem;
+        padding: 3px 7px;
+      }
+      .layout {
+        gap: 10px;
+      }
+    }
+    @media (max-width: 640px) {
+      body { padding: 10px; }
+      h1 { font-size: 1rem; }
+      .card {
+        padding: 12px;
+        border-radius: 12px;
+      }
+      .item {
+        padding: 10px;
+      }
+      .item-title {
+        font-size: .90rem;
+        font-weight: 700;
+      }
+      .item-text {
+        font-size: .84rem;
+        margin: 8px 0;
+      }
+      .item-actions {
+        gap: 6px;
+      }
+      .item-actions button {
+        font-size: .76rem;
+        padding: 7px 10px;
+        min-height: 30px;
+      }
+      .badge {
+        font-size: .64rem;
+        padding: 3px 7px;
+      }
+      label {
+        font-size: .76rem;
+      }
+      input[type="text"], select, textarea {
+        font-size: .86rem;
+        padding: 8px 10px;
+      }
+    }
+
     @media (max-width: 1100px) {
       .layout, .grid-2, .grid-3, .grid-4, .stats, .search-row, .product-row { grid-template-columns: 1fr; }
       .list { max-height: none; }
+      .top-actions { top: 8px; padding: 7px 8px; }
+      .top-actions button { font-size: .79rem; padding: 7px 10px; min-height: 32px; }
+      .stats-toggle-btn { font-size: .78rem; padding: 7px 10px; }
+    }
+    @media (max-width: 640px) {
+      h1 { font-size: 1.1rem; }
+      .top-actions .btn-row { gap: 6px; }
+      .top-actions button { font-size: .74rem; padding: 6px 8px; min-height: 29px; }
+      .stats-toggle-btn { font-size: .74rem; padding: 6px 9px; }
     }
   </style>
 </head>
@@ -140,24 +323,28 @@
     <header>
       <div>
         <h1>Asistente Académico PASIR</h1>
-        <p class="sub">Organiza respuestas por país, categoría y producto. Ahora incluye base editable para todos tus países y un panel para agregar o quitar países, módulos, cursos y productos.</p>
+        
       </div>
-      <div class="header-actions">
-        <button id="btn-semillas" class="btn-main" type="button">🌱 Cargar base completa</button>
-        <button id="btn-exportar" class="btn-ghost" type="button">⬇️ Exportar</button>
-        <button id="btn-importar" class="btn-ghost" type="button">⬆️ Importar</button>
-        <button id="btn-borrar-todo" class="btn-danger" type="button">🗑 Borrar todo</button>
-        <button id="theme-toggle" class="btn-ghost" type="button">🌙 Oscuro</button>
-      </div>
-    </header>
+      </header>
+
 
     
-    <div class="btn-row" style="margin-bottom:14px;">
-      <button class="btn-main" onclick="toggleSection('crear')">✏️ Crear / Editar</button>
-      <button class="btn-ghost" onclick="toggleSection('maestro')">🧠 Datos Maestros</button>
-      <button class="btn-ghost" onclick="toggleSection('estructura')">⚙️ Estructura</button>
+    <div class="top-actions">
+      <div class="btn-row">
+        <button id="btn-toggle-crear" class="btn-main" onclick="toggleSection('crear')">✏️ Editar</button>
+        <button id="btn-toggle-maestro" class="btn-ghost" onclick="toggleSection('maestro')">🧠 Maestros</button>
+        <button id="btn-toggle-estructura" class="btn-ghost" onclick="toggleSection('estructura')">⚙️ Estructura</button>
+        <button id="btn-semillas" class="btn-main" type="button">🌱 Base</button>
+        <button id="btn-exportar" class="btn-ghost" type="button">⬇️ Exportar</button>
+        <button id="btn-importar" class="btn-ghost" type="button">⬆️ Importar</button>
+        <button id="btn-borrar-todo" class="btn-danger" type="button">🗑 Borrar</button>
+        <button id="theme-toggle" class="btn-ghost" type="button">🌙 Tema</button>
+      </div>
     </div>
-<section class="stats">
+<div class="stats-toggle-wrap">
+      <button id="btn-toggle-stats" class="btn-ghost stats-toggle-btn" type="button">📊 Ver indicadores</button>
+    </div>
+    <section id="stats-panel" class="stats" style="display:none;">
       <div class="stat"><small>Mensajes</small><strong id="stat-total">0</strong></div>
       <div class="stat"><small>Productos</small><strong id="stat-productos">0</strong></div>
       <div class="stat"><small>Países / variantes</small><strong id="stat-paises">0</strong></div>
@@ -385,7 +572,7 @@
       </section>
 
       <section class="card">
-        <h2>Buscar mensaje guardado</h2>
+        <h2 class="titulo-busqueda">Buscar mensaje guardado</h2>
         <div class="grid-4" style="margin-bottom:12px;">
           <div class="field">
             <label for="filtro-categoria">Categoría</label>
@@ -583,6 +770,8 @@
     const filtroProducto = el('filtro-producto');
     const filtroVariante = el('filtro-variante');
     const filtroTipo = el('filtro-tipo');
+    const statsPanel = el('stats-panel');
+    const btnToggleStats = el('btn-toggle-stats');
 
     function clone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
@@ -814,6 +1003,7 @@
 
     function editMessage(item) {
       editId = item.id;
+      toggleSection('crear');
       categoria.value = item.categoria;
       refreshProducts();
       producto.value = item.producto;
@@ -824,6 +1014,9 @@
       contenido.value = item.contenido;
       favorito.value = String(!!item.favorito);
       setStatus(`Editando: ${item.titulo}`);
+      const crearSection = document.getElementById('sec-crear');
+      if (crearSection) crearSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      toast('Mensaje cargado para edición.');
     }
 
     function deleteMessage(id) {
@@ -1254,23 +1447,46 @@
     }
 
     
+
+    function toggleStats() {
+      const hidden = statsPanel.style.display === 'none' || !statsPanel.style.display;
+      statsPanel.style.display = hidden ? 'grid' : 'none';
+      btnToggleStats.textContent = hidden ? '📊 Ocultar indicadores' : '📊 Ver indicadores';
+    }
+
     function toggleSection(section) {
       const map = {
         crear: 'sec-crear',
         maestro: 'sec-maestro',
         estructura: 'sec-estructura'
       };
+      const btnMap = {
+        crear: 'btn-toggle-crear',
+        maestro: 'btn-toggle-maestro',
+        estructura: 'btn-toggle-estructura'
+      };
       Object.values(map).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
+        const node = document.getElementById(id);
+        if (node) node.style.display = 'none';
+      });
+      Object.values(btnMap).forEach(id => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.classList.remove('btn-main');
+        btn.classList.add('btn-ghost');
       });
       const target = document.getElementById(map[section]);
       if (target) target.style.display = 'block';
+      const activeBtn = document.getElementById(btnMap[section]);
+      if (activeBtn) {
+        activeBtn.classList.remove('btn-ghost');
+        activeBtn.classList.add('btn-main');
+      }
     }
 
 function applyTheme(theme) {
       document.body.setAttribute('data-theme', theme);
-      el('theme-toggle').textContent = theme === 'light' ? '☀️ Claro' : '🌙 Oscuro';
+      el('theme-toggle').textContent = theme === 'light' ? '☀️ Tema' : '🌙 Tema';
       localStorage.setItem(THEME_KEY, theme);
     }
 
@@ -1334,6 +1550,7 @@ function applyTheme(theme) {
       renderMessages();
       toast('Selección limpiada.');
     });
+    btnToggleStats.addEventListener('click', toggleStats);
     el('btn-borrar-todo').addEventListener('click', () => {
       if (!confirm('¿Seguro que quieres eliminar todos los textos guardados? Esta acción no se puede deshacer.')) return;
       mensajes = [];
@@ -1375,14 +1592,5 @@ function applyTheme(theme) {
     clearForm();
     loadMasterData();
   </script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
-      });
-    }
-  </script>
-
 </body>
 </html>
